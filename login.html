@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriFlow · Login / Register</title>
+<link rel="stylesheet" href="/css/index.css">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyDEcs8GSYIo2DZw1UERVJQ5wgt9i-yKyl0",
+    authDomain: "leefrancis-5ec8f.firebaseapp.com",
+    projectId: "leefrancis-5ec8f",
+    storageBucket: "leefrancis-5ec8f.firebasestorage.app",
+    messagingSenderId: "965812133410",
+    appId: "1:965812133410:web:9ba0c0f4bd2b486185347b"
+    };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.showPage = (page) => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-page="${page}"]`).classList.add('active');
+    document.getElementById('feedback').textContent = '';
+  };
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = '';
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        feedback.style.color = 'var(--green-600)';
+        feedback.textContent = "Login successful! Redirecting…";
+        setTimeout(() => window.location.href = 'index.html', 1000);
+      } catch(e) {
+        feedback.style.color = 'var(--red-600)';
+        feedback.textContent = e.message;
+      }
+    });
+
+    document.getElementById('register-btn').addEventListener('click', async () => {
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const confirm = document.getElementById('reg-password-confirm').value;
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = '';
+      if (password !== confirm) { feedback.textContent = "Passwords do not match!"; return; }
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        feedback.style.color = 'var(--green-600)';
+        feedback.textContent = "Registration successful! Redirecting to login…";
+        setTimeout(() => showPage('login-page'), 1500);
+      } catch(e) {
+        feedback.style.color = 'var(--red-600)';
+        feedback.textContent = e.message;
+      }
+    });
+  });
+</script>
+</head>
+<body style="display:flex; justify-content:center; align-items:center; min-height:100vh; background: var(--bg);">
+
+<div class="card" style="max-width:400px; width:100%;">
+  <h2 style="font-family: var(--font-display); text-align:center; margin-bottom:12px;">AgriFlow</h2>
+  <p style="text-align:center; color: var(--text-faint); margin-bottom:20px;">Manage your farm data securely</p>
+
+  <div class="tabs">
+    <div class="tab active" data-page="login-page" onclick="showPage('login-page')">Login</div>
+    <div class="tab" data-page="register-page" onclick="showPage('register-page')">Register</div>
+  </div>
+
+  <div id="login-page" class="page active">
+    <div class="form-group full">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" id="login-email" placeholder="you@example.com">
+    </div>
+    <div class="form-group full">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="login-password" placeholder="********">
+    </div>
+    <div class="submit-row">
+      <button class="tb-btn primary" id="login-btn">Login</button>
+    </div>
+  </div>
+
+  <div id="register-page" class="page">
+    <div class="form-group full">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" id="reg-email" placeholder="you@example.com">
+    </div>
+    <div class="form-group full">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="reg-password" placeholder="********">
+    </div>
+    <div class="form-group full">
+      <label class="form-label">Confirm Password</label>
+      <input class="form-input" type="password" id="reg-password-confirm" placeholder="********">
+    </div>
+    <div class="submit-row">
+      <button class="tb-btn primary" id="register-btn">Register</button>
+    </div>
+  </div>
+
+  <div id="feedback" style="margin-top:12px; text-align:center; font-size:13px;"></div>
+</div>
+
+</body>
+</html>

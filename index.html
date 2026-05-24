@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/index.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="./javascript/chart.js"></script>
+<script type="module" src="./javascript/ui.js"></script>
+<script type="module" src="./javascript/weather.js"></script>
+<script type="module" src="./javascript/firebase.js"></script>
+<script type="module" src="./javascript/features.js"></script>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">
+        <div class="brand-icon">🌾</div>
+        <div>
+          <div class="brand-name">AgriFlow</div>
+          <div class="brand-sub">CropCast</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-label">Main</div>
+        <div class="nav-item active" onclick="showPage('dashboard', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Dashboard
+        </div>
+        <div class="nav-item" onclick="showPage('crops', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22V12M12 12C12 7 7 4 3 5c0 5 3 9 9 7M12 12c0-5 5-8 9-7c0 5-3 9-9 7"/></svg>
+          Crops
+          <span class="nav-badge" id="nav-crop-count">0</span>
+        </div>
+        <div class="nav-item" onclick="showPage('forecast', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+          Forecast
+        </div>
+        <div class="nav-item" onclick="showPage('weather', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+          Weather
+        </div>
+        <div class="nav-item" onclick="showPage('alerts', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          Alerts
+          <span class="nav-badge" id="nav-alert-count">3</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Farm Tools</div>
+        <div class="nav-item" onclick="showPage('activity', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Activity Log
+        </div>
+        <div class="nav-item" onclick="showPage('harvest', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22V12M12 12C12 7 7 4 3 5c0 5 3 9 9 7M12 12c0-5 5-8 9-7c0 5-3 9-9 7"/></svg>
+          Harvest Records
+        </div>
+        <div class="nav-item" onclick="showPage('tasks', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Tasks
+          <span class="nav-badge" id="nav-task-count">0</span>
+        </div>
+        <div class="nav-item" onclick="showPage('fieldmap', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+          Field Map
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Data</div>
+        <div class="nav-item" onclick="showPage('analytics', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Analytics
+        </div>
+        <div class="nav-item" onclick="showPage('settings', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Settings
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" id="user-avatar">FA</div>
+      <div>
+        <div class="user-name" id="sidebar-user-name">Farm Admin</div>
+        <div class="user-role" id="sidebar-user-email">Field Manager</div>
+      </div>
+    </div>
+  </aside>
+  <!-- ── END SIDEBAR ── -->
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="topbar-right">
+        <div class="fb-status">
+          <div class="fb-dot" id="fb-dot"></div>
+          <span id="fb-status-text">Connecting…</span>
+        </div>
+        <span id="user-name" style="font-size:13px;color:var(--text-faint);margin-right:8px;"></span>
+        <button class="tb-btn" onclick="signOutUser()" style="margin-right:8px;">Sign Out</button>
+        <button class="tb-btn primary" onclick="openAddCrop()">+ Add Crop</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── DASHBOARD PAGE ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="stat-grid">
+          <div class="stat-card green">
+            <div class="stat-icon green">🌱</div>
+            <div class="stat-val" id="stat-total-crops">—</div>
+            <div class="stat-label">Total Crops</div>
+            <div class="stat-change up" id="stat-crops-change">Loading…</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon amber">📊</div>
+            <div class="stat-val" id="stat-yield">—</div>
+            <div class="stat-label">Avg Yield (t/ha)</div>
+            <div class="stat-change up">vs last season</div>
+          </div>
+          <div class="stat-card sky">
+            <div class="stat-icon sky">💧</div>
+            <div class="stat-val">62%</div>
+            <div class="stat-label">Soil Moisture</div>
+            <div class="stat-change up">↑ Optimal range</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon red">⚠️</div>
+            <div class="stat-val" id="stat-at-risk">—</div>
+            <div class="stat-label">At-Risk Fields</div>
+            <div class="stat-change down" id="stat-risk-change">Checking…</div>
+          </div>
+        </div>
+
+        <div class="grid-3-2">
+          <div class="card">
+            <div class="card-hd">
+              <span class="card-title">Yield Forecast — Next 6 Months</span>
+              <span class="card-action" onclick="showPage('analytics', document.querySelector('[onclick*=analytics]'))">View full →</span>
+            </div>
+            <div class="chart-wrap"><canvas id="yieldChart"></canvas></div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showPage('weather', document.querySelector('[onclick*=weather]'))">
+            <div class="card-hd">
+              <span class="card-title">Weather</span>
+              <span class="card-action">View full →</span>
+            </div>
+            <div style="font-size:13px;color:var(--text-faint);padding:12px 0;">Click to open Weather Tracker</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-hd">
+              <span class="card-title">Active Crops</span>
+              <span class="card-action" onclick="showPage('crops', document.querySelector('[onclick*=crops]'))">Manage all →</span>
+            </div>
+            <div id="dash-crop-list"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+          </div>
+          <div class="card">
+            <div class="card-hd">
+              <span class="card-title">Active Alerts</span>
+              <span class="card-action" onclick="showPage('alerts', document.querySelector('[onclick*=alerts]'))">View all →</span>
+            </div>
+            <div class="alert-list">
+              <div class="alert-item warn">
+                <div class="alert-dot"></div>
+                <div class="alert-text"><strong>Dry spell forecast</strong> Risk of moisture deficit over next 5 days.<div class="alert-time">2 hours ago</div></div>
+              </div>
+              <div class="alert-item danger">
+                <div class="alert-dot"></div>
+                <div class="alert-text"><strong>Pest risk detected</strong> Aphid pressure elevated in Field B.<div class="alert-time">5 hours ago</div></div>
+              </div>
+              <div class="alert-item info">
+                <div class="alert-dot"></div>
+                <div class="alert-text"><strong>Harvest window approaching</strong> Maize in Field A ready in 8–12 days.<div class="alert-time">Yesterday</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ── END DASHBOARD ── -->
+
+      <!-- ── CROPS PAGE ── -->
+      <div class="page" id="page-crops">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div>
+            <h2 style="font-family:var(--font-display);font-size:22px;">Crops</h2>
+            <p style="color:var(--text-faint);font-size:13px;margin-top:4px;">Manage your crop fields and growth stages</p>
+          </div>
+          <button class="tb-btn primary" onclick="openAddCrop()">+ Add Crop</button>
+        </div>
+        <div id="crop-cards-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:20px;"></div>
+      </div>
+
+      <!-- ── FORECAST PAGE ── -->
+      <div class="page" id="page-forecast">
+        <h2 style="font-family:var(--font-display);font-size:22px;margin-bottom:6px;">Crop Forecast</h2>
+        <p style="color:var(--text-faint);font-size:13px;margin-bottom:24px;">AI-assisted yield and harvest predictions per crop</p>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Monthly Yield Projection</span></div>
+            <div class="chart-wrap"><canvas id="forecastChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Crop Distribution</span></div>
+            <div class="chart-wrap" style="height:190px;display:flex;align-items:center;justify-content:center;">
+              <canvas id="pieChart" style="max-height:190px;max-width:190px;"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-hd"><span class="card-title">Harvest Calendar</span></div>
+          <div id="harvest-calendar"></div>
+        </div>
+      </div>
+
+      <!-- ── WEATHER PAGE ── -->
+      <div class="page" id="page-weather">
+        <h2 style="font-family:var(--font-display);font-size:22px;margin-bottom:6px;">Weather Tracker</h2>
+        <p style="color:var(--text-faint);font-size:13px;margin-bottom:24px;">Real-time weather data for your farm location</p>
+        <div id="weather-page-container"></div>
+      </div>
+
+      <!-- ── ALERTS PAGE ── -->
+      <div class="page" id="page-alerts">
+        <h2 style="font-family:var(--font-display);font-size:22px;margin-bottom:20px;">Field Alerts</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="alert-item danger" style="padding:16px 18px;">
+            <div class="alert-dot"></div>
+            <div class="alert-text"><strong>🐛 Pest risk — Field B (Soybean)</strong> Aphid colony growth detected via satellite imagery.<div class="alert-time">5 hours ago · High priority</div></div>
+          </div>
+          <div class="alert-item warn" style="padding:16px 18px;">
+            <div class="alert-dot"></div>
+            <div class="alert-text"><strong>💧 Dry spell forecast — Fields A, C, D</strong> 5-day precipitation forecast below 3mm.<div class="alert-time">2 hours ago · Medium priority</div></div>
+          </div>
+          <div class="alert-item info" style="padding:16px 18px;">
+            <div class="alert-dot"></div>
+            <div class="alert-text"><strong>🌾 Harvest window — Maize (Field A)</strong> Optimal harvest window projected in 8–12 days.<div class="alert-time">Yesterday · Informational</div></div>
+          </div>
+          <div class="alert-item info" style="padding:16px 18px;">
+            <div class="alert-dot"></div>
+            <div class="alert-text"><strong>🌡 Temperature swing — All fields</strong> Night-time lows expected to drop to 12°C.<div class="alert-time">3 days ago · Informational</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ACTIVITY LOG PAGE ── -->
+      <div class="page" id="page-activity">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div>
+            <h2 style="font-family:var(--font-display);font-size:22px;">Activity Log</h2>
+            <p style="color:var(--text-faint);font-size:13px;margin-top:4px;">Track watering, fertilizing, pest spraying and more</p>
+          </div>
+          <button class="tb-btn primary" onclick="openActivityModal()">+ Log Activity</button>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="tb-btn activity-filter active" onclick="filterActivity('all', this)">All</button>
+            <button class="tb-btn activity-filter" onclick="filterActivity('watering', this)">💧 Watering</button>
+            <button class="tb-btn activity-filter" onclick="filterActivity('fertilizing', this)">🌿 Fertilizing</button>
+            <button class="tb-btn activity-filter" onclick="filterActivity('spraying', this)">🧪 Spraying</button>
+            <button class="tb-btn activity-filter" onclick="filterActivity('scouting', this)">🔍 Scouting</button>
+            <button class="tb-btn activity-filter" onclick="filterActivity('other', this)">📝 Other</button>
+          </div>
+        </div>
+        <div id="activity-list" class="card"><div class="loading"><div class="spinner"></div>Loading activities…</div></div>
+      </div>
+
+      <!-- ── HARVEST RECORDS PAGE ── -->
+      <div class="page" id="page-harvest">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div>
+            <h2 style="font-family:var(--font-display);font-size:22px;">Harvest Records</h2>
+            <p style="color:var(--text-faint);font-size:13px;margin-top:4px;">Actual vs estimated yield history</p>
+          </div>
+          <button class="tb-btn primary" onclick="openHarvestModal()">+ Record Harvest</button>
+        </div>
+        <div class="grid-2" style="margin-bottom:20px;">
+          <div class="stat-card green">
+            <div class="stat-icon green">🌾</div>
+            <div class="stat-val" id="harvest-total">—</div>
+            <div class="stat-label">Total Harvested (t)</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon amber">📊</div>
+            <div class="stat-val" id="harvest-accuracy">—</div>
+            <div class="stat-label">Forecast Accuracy</div>
+          </div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="crop-table" style="padding:0;">
+            <thead style="background:var(--surface2);">
+              <tr>
+                <th style="padding:14px 20px;">Crop</th>
+                <th>Field</th>
+                <th>Date</th>
+                <th>Est. Yield</th>
+                <th>Actual Yield</th>
+                <th>Variance</th>
+                <th>Notes</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="harvest-body">
+              <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-faint);">No harvest records yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── TASKS PAGE ── -->
+      <div class="page" id="page-tasks">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div>
+            <h2 style="font-family:var(--font-display);font-size:22px;">Task Manager</h2>
+            <p style="color:var(--text-faint);font-size:13px;margin-top:4px;">To-do list per field — stay on top of your farm</p>
+          </div>
+          <button class="tb-btn primary" onclick="openTaskModal()">+ Add Task</button>
+        </div>
+        <div class="grid-2" style="margin-bottom:20px;">
+          <div class="stat-card sky">
+            <div class="stat-icon sky">📋</div>
+            <div class="stat-val" id="tasks-pending">—</div>
+            <div class="stat-label">Pending Tasks</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon green">✅</div>
+            <div class="stat-val" id="tasks-done">—</div>
+            <div class="stat-label">Completed Today</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <button class="tb-btn task-filter active" onclick="filterTasks('pending', this)">Pending</button>
+            <button class="tb-btn task-filter" onclick="filterTasks('done', this)">Completed</button>
+            <button class="tb-btn task-filter" onclick="filterTasks('all', this)">All</button>
+          </div>
+          <div id="task-list"><div class="loading"><div class="spinner"></div>Loading tasks…</div></div>
+        </div>
+      </div>
+
+      <!-- ── FIELD MAP PAGE ── -->
+      <div class="page" id="page-fieldmap">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div>
+            <h2 style="font-family:var(--font-display);font-size:22px;">Field Map</h2>
+            <p style="color:var(--text-faint);font-size:13px;margin-top:4px;">Visual overview of all your fields and crop status</p>
+          </div>
+          <button class="tb-btn primary" onclick="openAddCrop()">+ Add Crop</button>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-faint);">
+            <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#4caf50;margin-right:5px;vertical-align:middle;"></span>Growing</span>
+            <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#2196f3;margin-right:5px;vertical-align:middle;"></span>Planted</span>
+            <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#ff9800;margin-right:5px;vertical-align:middle;"></span>Ready to Harvest</span>
+            <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#f44336;margin-right:5px;vertical-align:middle;"></span>At Risk</span>
+          </div>
+        </div>
+        <div id="field-map-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;"></div>
+      </div>
+
+      <!-- ── ANALYTICS PAGE ── -->
+      <div class="page" id="page-analytics">
+        <h2 style="font-family:var(--font-display);font-size:22px;margin-bottom:20px;">Analytics</h2>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Yield by Crop Type (t/ha)</span></div>
+            <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Soil Moisture Trend</span></div>
+            <div class="chart-wrap"><canvas id="moistureChart"></canvas></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-hd"><span class="card-title">Season Summary</span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+            <div style="background:var(--green-50);border-radius:var(--radius-sm);padding:16px;">
+              <div style="font-size:11px;color:var(--green-600);font-weight:600;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Best Performer</div>
+              <div style="font-size:20px;font-family:var(--font-display);">Maize</div>
+              <div style="font-size:12px;color:var(--text-faint);margin-top:4px;">4.8 t/ha avg yield</div>
+            </div>
+            <div style="background:var(--amber-50);border-radius:var(--radius-sm);padding:16px;">
+              <div style="font-size:11px;color:var(--amber-600);font-weight:600;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Total Planted Area</div>
+              <div style="font-size:20px;font-family:var(--font-display);" id="total-area">—</div>
+              <div style="font-size:12px;color:var(--text-faint);margin-top:4px;">across all fields</div>
+            </div>
+            <div style="background:var(--sky-50);border-radius:var(--radius-sm);padding:16px;">
+              <div style="font-size:11px;color:var(--sky-600);font-weight:600;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Next Harvest</div>
+              <div style="font-size:20px;font-family:var(--font-display);">~10 days</div>
+              <div style="font-size:12px;color:var(--text-faint);margin-top:4px;">Maize · Field A</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS PAGE ── -->
+      <div class="page" id="page-settings">
+        <h2 style="font-family:var(--font-display);font-size:22px;margin-bottom:6px;">Settings</h2>
+        <p style="color:var(--text-faint);font-size:13px;margin-bottom:24px;">Configure your Firebase project to sync farm data across all devices.</p>
+        <div class="card" style="max-width:560px;">
+          <div class="card-hd"><span class="card-title">Firebase Configuration</span></div>
+          <div class="form-grid">
+            <div class="form-group full"><label class="form-label">API Key</label><input type="text" class="form-input" id="cfg-apikey" placeholder="AIzaSy..." /></div>
+            <div class="form-group full"><label class="form-label">Auth Domain</label><input type="text" class="form-input" id="cfg-authdomain" placeholder="your-project.firebaseapp.com" /></div>
+            <div class="form-group full"><label class="form-label">Database URL</label><input type="text" class="form-input" id="cfg-dburl" placeholder="https://your-project-default-rtdb.firebaseio.com" /></div>
+            <div class="form-group"><label class="form-label">Project ID</label><input type="text" class="form-input" id="cfg-projectid" placeholder="your-project-id" /></div>
+            <div class="form-group"><label class="form-label">Storage Bucket</label><input type="text" class="form-input" id="cfg-bucket" placeholder="your-project.appspot.com" /></div>
+            <div class="form-group full"><label class="form-label">Messaging Sender ID</label><input type="text" class="form-input" id="cfg-senderid" placeholder="123456789012" /></div>
+            <div class="form-group full"><label class="form-label">App ID</label><input type="text" class="form-input" id="cfg-appid" placeholder="1:123456789012:web:abc..." /></div>
+          </div>
+          <div class="submit-row">
+            <button class="tb-btn" onclick="testConnection()">Test Connection</button>
+            <button class="tb-btn primary" onclick="saveFirebaseConfig()">Save & Connect</button>
+          </div>
+          <div id="cfg-feedback" style="margin-top:14px;font-size:13px;color:var(--text-faint);"></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ── MODALS ── -->
+
+<!-- Add Crop Modal -->
+<div class="modal-overlay" id="add-crop-modal">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('add-crop-modal')">✕</span>
+    <div class="modal-title">Add New Crop</div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Crop Name *</label><input type="text" class="form-input" id="f-name" placeholder="e.g. Maize" /></div>
+      <div class="form-group"><label class="form-label">Crop Type</label><select class="form-input" id="f-type"><option>Cereal</option><option>Legume</option><option>Vegetable</option><option>Fruit</option><option>Cash Crop</option><option>Root</option></select></div>
+      <div class="form-group"><label class="form-label">Field / Location</label><input type="text" class="form-input" id="f-field" placeholder="e.g. Field A" /></div>
+      <div class="form-group"><label class="form-label">Area (ha)</label><input type="number" class="form-input" id="f-area" placeholder="2.5" step="0.1" min="0" /></div>
+      <div class="form-group"><label class="form-label">Planting Date</label><input type="date" class="form-input" id="f-planted" /></div>
+      <div class="form-group"><label class="form-label">Expected Harvest</label><input type="date" class="form-input" id="f-harvest" /></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="f-status"><option value="planted">Planted</option><option value="growing">Growing</option><option value="harvest">Ready to Harvest</option><option value="at-risk">At Risk</option></select></div>
+      <div class="form-group"><label class="form-label">Est. Yield (t/ha)</label><input type="number" class="form-input" id="f-yield" placeholder="3.5" step="0.1" min="0" /></div>
+      <div class="form-group full"><label class="form-label">Notes</label><input type="text" class="form-input" id="f-notes" placeholder="Any additional notes…" /></div>
+    </div>
+    <div class="submit-row" style="margin-top:18px;">
+      <button class="tb-btn" onclick="closeModal('add-crop-modal')">Cancel</button>
+      <button class="tb-btn primary" onclick="saveCrop()">Save Crop</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Crop Modal -->
+<div class="modal-overlay" id="edit-crop-modal">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('edit-crop-modal')">✕</span>
+    <div class="modal-title">Edit Crop</div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Crop Name *</label><input type="text" class="form-input" id="e-name" /></div>
+      <div class="form-group"><label class="form-label">Crop Type</label><select class="form-input" id="e-type"><option>Cereal</option><option>Legume</option><option>Vegetable</option><option>Fruit</option><option>Cash Crop</option><option>Root</option></select></div>
+      <div class="form-group"><label class="form-label">Field / Location</label><input type="text" class="form-input" id="e-field" /></div>
+      <div class="form-group"><label class="form-label">Area (ha)</label><input type="number" class="form-input" id="e-area" step="0.1" min="0" /></div>
+      <div class="form-group"><label class="form-label">Planting Date</label><input type="date" class="form-input" id="e-planted" /></div>
+      <div class="form-group"><label class="form-label">Expected Harvest</label><input type="date" class="form-input" id="e-harvest" /></div>
+      <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="e-status"><option value="planted">Planted</option><option value="growing">Growing</option><option value="harvest">Ready to Harvest</option><option value="at-risk">At Risk</option></select></div>
+      <div class="form-group"><label class="form-label">Est. Yield (t/ha)</label><input type="number" class="form-input" id="e-yield" step="0.1" min="0" /></div>
+      <div class="form-group full"><label class="form-label">Notes</label><input type="text" class="form-input" id="e-notes" /></div>
+    </div>
+    <div class="submit-row" style="margin-top:18px;">
+      <button class="tb-btn" onclick="closeModal('edit-crop-modal')">Cancel</button>
+      <button class="tb-btn primary" onclick="saveEditCrop()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Activity Modal -->
+<div class="modal-overlay" id="activity-modal">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('activity-modal')">✕</span>
+    <div class="modal-title">Log Activity</div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Activity Type</label><select class="form-input" id="a-type"><option value="watering">💧 Watering</option><option value="fertilizing">🌿 Fertilizing</option><option value="spraying">🧪 Pest Spraying</option><option value="scouting">🔍 Field Scouting</option><option value="other">📝 Other</option></select></div>
+      <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="a-date" /></div>
+      <div class="form-group"><label class="form-label">Field / Crop</label><input type="text" class="form-input" id="a-field" placeholder="e.g. Field A — Maize" /></div>
+      <div class="form-group"><label class="form-label">Performed By</label><input type="text" class="form-input" id="a-by" placeholder="e.g. Farm Admin" /></div>
+      <div class="form-group full"><label class="form-label">Notes</label><input type="text" class="form-input" id="a-notes" placeholder="Details about this activity…" /></div>
+    </div>
+    <div class="submit-row" style="margin-top:18px;">
+      <button class="tb-btn" onclick="closeModal('activity-modal')">Cancel</button>
+      <button class="tb-btn primary" onclick="saveActivity()">Save Activity</button>
+    </div>
+  </div>
+</div>
+
+<!-- Harvest Modal -->
+<div class="modal-overlay" id="harvest-modal">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('harvest-modal')">✕</span>
+    <div class="modal-title">Record Harvest</div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Crop Name</label><input type="text" class="form-input" id="h-crop" placeholder="e.g. Maize" /></div>
+      <div class="form-group"><label class="form-label">Field</label><input type="text" class="form-input" id="h-field" placeholder="e.g. Field A" /></div>
+      <div class="form-group"><label class="form-label">Harvest Date</label><input type="date" class="form-input" id="h-date" /></div>
+      <div class="form-group"><label class="form-label">Est. Yield (t/ha)</label><input type="number" class="form-input" id="h-est" placeholder="3.5" step="0.1" /></div>
+      <div class="form-group"><label class="form-label">Actual Yield (t/ha)</label><input type="number" class="form-input" id="h-actual" placeholder="3.8" step="0.1" /></div>
+      <div class="form-group full"><label class="form-label">Notes</label><input type="text" class="form-input" id="h-notes" placeholder="Any harvest notes…" /></div>
+    </div>
+    <div class="submit-row" style="margin-top:18px;">
+      <button class="tb-btn" onclick="closeModal('harvest-modal')">Cancel</button>
+      <button class="tb-btn primary" onclick="saveHarvest()">Save Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- Task Modal -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal('task-modal')">✕</span>
+    <div class="modal-title">Add Task</div>
+    <div class="form-grid">
+      <div class="form-group full"><label class="form-label">Task Description</label><input type="text" class="form-input" id="t-desc" placeholder="e.g. Spray Field B for aphids" /></div>
+      <div class="form-group"><label class="form-label">Field</label><input type="text" class="form-input" id="t-field" placeholder="e.g. Field B" /></div>
+      <div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input" id="t-due" /></div>
+      <div class="form-group"><label class="form-label">Priority</label><select class="form-input" id="t-priority"><option value="high">🔴 High</option><option value="medium" selected>🟡 Medium</option><option value="low">🟢 Low</option></select></div>
+      <div class="form-group"><label class="form-label">Assigned To</label><input type="text" class="form-input" id="t-assigned" placeholder="e.g. Farm Admin" /></div>
+    </div>
+    <div class="submit-row" style="margin-top:18px;">
+      <button class="tb-btn" onclick="closeModal('task-modal')">Cancel</button>
+      <button class="tb-btn primary" onclick="saveTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+</body>
+</html>
